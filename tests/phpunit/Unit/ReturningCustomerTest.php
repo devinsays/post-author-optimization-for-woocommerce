@@ -1,38 +1,39 @@
 <?php
-namespace PostAuthorOptimization\UnitTests;
 
+namespace PostAuthorOptimization\Test\Unit;
+
+use WP_UnitTestCase;
+use WC_Helper_Order;
 use PostAuthorOptimization;
 
-class Test_Post_Author_Optimization extends \WC_Unit_Test_Case {
+class Post_Author_Optimization_Test extends WP_UnitTestCase {
 
+	protected static $test_user_id;
 	protected static $current_user_id;
 
-	/**
-	 * Setup once before running tests.
-	 *
-	 * @param object $factory Factory object.
-	 */
-	public static function wpSetUpBeforeClass( $factory ) {
+	public function setUp() {
+		// Not totally necessary, just ensures multiple customer accounts.
+		self::$test_user_id = wp_create_user(
+			'testuser',
+			'password',
+			'test@test.com'
+		);
+
+		// This user ID should be 3.
 		self::$current_user_id = wp_create_user(
-			'testuser1',
+			'currentuser',
 			'password1',
-			'test@test1.com'
+			'currentuser@test.com'
 		);
 
 		wp_set_current_user( self::$current_user_id );
-	}
-
-	public static function tearDownAfterClass() {
-		wp_delete_user( self::$current_user_id );
-		wp_set_current_user( 0 );
-
-		parent::tearDownAfterClass();
 	}
 
 	/**
 	 * Test that a newly created order will get post_author from current user ID.
 	 */
 	public function test_order_author() {
+
 		$order = WC_Helper_Order::create_order( self::$current_user_id );
 
 		// Manually update post_author field to match our test user instance.
@@ -50,4 +51,11 @@ class Test_Post_Author_Optimization extends \WC_Unit_Test_Case {
 
 		$this->assertEquals( (int) $result[0]['post_author'], self::$current_user_id );
 	}
+
+	public function tearDown() {
+		wp_delete_user( self::$test_user_id );
+		wp_delete_user( self::$current_user_id );
+		wp_set_current_user( 0 );
+	}
+
 }
