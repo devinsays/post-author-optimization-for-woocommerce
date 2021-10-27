@@ -17,8 +17,7 @@
 	</testsuites>
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">includes</directory>
-			<file>woocommerce-coupon-restrictions.php</file>
+			<file>post-author-optimization-for-woocommerce.php</file>
 		</whitelist>
 	</filter>
 </phpunit>

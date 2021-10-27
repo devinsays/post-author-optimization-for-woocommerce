@@ -7,13 +7,12 @@ jobs:
     strategy:
       matrix:
         php_ver:
-          - "7.2"
           - "7.4"
         wp_ver:
           - "latest"
         wc_ver:
           - "latest"
-          - "4.8.1"
+          - "5.8.1"
 
     runs-on: ubuntu-latest
 
